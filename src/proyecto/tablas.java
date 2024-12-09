@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Videojuegos {
+public class tablas {
     private int id;
     private String titulo;
     private String genero;
@@ -15,38 +15,13 @@ public class Videojuegos {
     private String plataforma;
 
     // Constructor
-    public Videojuegos(int id, String titulo, String genero, Date fecha_lanzamiento, int calificacion, String plataforma) {
+    public tablas(int id, String titulo, String genero, Date fecha_lanzamiento, int calificacion, String plataforma) {
         this.id = id;
         this.titulo = titulo;
         this.genero = genero;
         this.fecha_lanzamiento = fecha_lanzamiento;
         this.calificacion = calificacion;
         this.plataforma = plataforma;
-    }
-
-    // Datos que se desean conseeguir
-    public int getID() {
-        return id;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public Date getFecha_lanzamiento() {
-        return fecha_lanzamiento;
-    }
-
-    public int getCalificacion() {
-        return calificacion;
-    }
-
-    public String getPlataforma() {
-        return plataforma;
     }
 
     // Método para obtener los juegos de acuerdo con la categoría desde la base de datos

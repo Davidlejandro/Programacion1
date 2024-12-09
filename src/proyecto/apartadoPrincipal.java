@@ -1,4 +1,4 @@
-package gamestore.proyecto;
+package proyecto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -164,42 +164,60 @@ public class apartadoPrincipal {
         // Hacer visible la ventana
         ventana.setVisible(true);
     }
+    // Método para mostrar los juegos
+    private static void mostrarJuegos(String categoria, JFrame ventana) {
+        // Obtener la lista de juegos desde la base de datos (simulación)
+        List<Videojuegos> juegos = Videojuegos.obtenerJuegosPorCategoria(categoria);
 
-// Método para mostrar los juegos en una nueva ventana usando una tabla
-private static void mostrarJuegos(String categoria, JFrame ventana) {
-    // Obtener la lista de juegos desde la base de datos
-    List<Videojuegos> juegos = Videojuegos.obtenerJuegosPorCategoria(categoria);
+        // Crear una nueva ventana para mostrar los juegos
+        JFrame ventanaJuegos = new JFrame(categoria + " - Juegos");
+        ventanaJuegos.setSize(800, 400); // Tamaño de la ventana
+        ventanaJuegos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cerrar solo esta ventana
+        ventanaJuegos.setLayout(new BorderLayout());
 
-    // Crear una nueva ventana para mostrar los juegos
-    JFrame ventanaJuegos = new JFrame(categoria + " - Juegos");
-    ventanaJuegos.setSize(800, 400); // Tamaño de la ventana
-    ventanaJuegos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cerrar solo esta ventana
-    ventanaJuegos.setLayout(new BorderLayout());
+        // Crear un modelo de tabla para los datos
+        String[] columnas = {"ID", "Título", "Género", "Fecha Lanzamiento", "Calificación", "Plataforma", "Acción"};
+        DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 6; // Solo permitir editar la columna de acción
+            }
+        };
 
-    // Crear un modelo de tabla para los datos
-    String[] columnas = {"ID", "Título", "Género", "Fecha Lanzamiento", "Calificación", "Plataforma"};
-    DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0);
+        // Llenar el modelo con los datos de los videojuegos
+        for (Videojuegos juego : juegos) {
+            // Crear una nueva fila con los datos del juego
+            modeloTabla.addRow(new Object[] {
+                juego.getID(),
+                juego.getTitulo(),
+                juego.getGenero(),
+                juego.getFecha_lanzamiento(),
+                juego.getCalificacion(),
+                juego.getPlataforma(),
+                "Comprar" // Texto del botón
+            });
+        }
 
-    // Llenar el modelo con los datos de los videojuegos
-    for (Videojuegos juego : juegos) {
-        modeloTabla.addRow(new Object[]{
-            juego.getID(),
-            juego.getTitulo(),
-            juego.getGenero(),
-            juego.getFecha_lanzamiento(),
-            juego.getCalificacion(),
-            juego.getPlataforma()
-        });
+        // Crear la tabla con el modelo
+        JTable tabla = new JTable(modeloTabla);
+
+        // Hacer que la tabla sea desplazable si tiene muchos datos
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        ventanaJuegos.add(scrollPane, BorderLayout.CENTER);
+
+        // Hacer visible la ventana con la tabla
+        ventanaJuegos.setVisible(true);
     }
 
-    // Crear la tabla con el modelo
-    JTable tabla = new JTable(modeloTabla);
+    // Método de confirmación de compra
+    public static void mostrarConfirmacionCompra(Videojuegos juego, String usuario) {
+        String mensaje = "Compra realizada con éxito\n" +
+                         "Juego: " + juego.getTitulo() + "\n" +
+                         "Usuario: " + usuario + "\n" +
+                         "Plataforma: " + juego.getPlataforma() + "\n" +
+                         "Fecha de Lanzamiento: " + juego.getFecha_lanzamiento() + "\n" +
+                         "Calificación: " + juego.getCalificacion();
+        JOptionPane.showMessageDialog(null, mensaje, "Confirmación de Compra", JOptionPane.INFORMATION_MESSAGE);
+    }
 
-    // Hacer que la tabla sea desplazable si tiene muchos datos
-    JScrollPane scrollPane = new JScrollPane(tabla);
-    ventanaJuegos.add(scrollPane, BorderLayout.CENTER);
-
-    // Hacer visible la ventana con la tabla
-    ventanaJuegos.setVisible(true);
-}
 }

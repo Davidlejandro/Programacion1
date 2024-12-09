@@ -1,4 +1,4 @@
-package gamestore.proyecto;
+package proyecto;
 import javax.swing.*;
 import java.awt.*;
 public class esteban {

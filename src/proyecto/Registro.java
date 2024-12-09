@@ -1,14 +1,52 @@
-package gamestore.proyecto;
+package proyecto;
 
 import javax.swing.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 
+public class Registro {
+    private int id;
+    private String nombre;
+    private Date fechaNacimiento;
+    private String telefono; // Cambié esto de int a String
+    private String correo;
+    private String contraseña;
 
-public class Registro extends usuario {
-
-    public Registro(String nombre, String fechaNacimiento, String telefono, String correo, String contraseña) {
-        super(nombre, fechaNacimiento, telefono, correo, contraseña);
+    public Registro(int id, String nombre, Date fechaNacimiento, String telefono, String correo, String contraseña) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.contraseña = contraseña;
     }
 
+    // Métodos getter
+    public int getID() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    // Método para realizar el registro
     public static Registro realizarRegistro(JFrame ventana) {
         String cancelMessage = "El registro ha sido cancelado.";
 
@@ -30,29 +68,42 @@ public class Registro extends usuario {
         }
 
         // Validación para la fecha de nacimiento
-        String fechaNacimiento;
+        String fechaNacimientoStr;
+        Date fechaNacimiento = null;
         while (true) {
-            fechaNacimiento = JOptionPane.showInputDialog(ventana, "Ingrese su Fecha de Nacimiento (DD/MM/AAAA):");
-            if (fechaNacimiento == null) return null;
-            if (fechaNacimiento.matches("\\d{2}/\\d{2}/\\d{4}")) break;
-            JOptionPane.showMessageDialog(ventana, "Por favor, ingrese una fecha válida (DD/MM/AAAA).",
-                    "Error de registro", JOptionPane.ERROR_MESSAGE);
+            fechaNacimientoStr = JOptionPane.showInputDialog(ventana, "Ingrese su Fecha de Nacimiento (DD/MM/AAAA):");
+            if (fechaNacimientoStr == null) return null;
+            if (fechaNacimientoStr.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                try {
+                    // Convertir la fecha de nacimiento de String a Date
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date utilDate = sdf.parse(fechaNacimientoStr);
+                    fechaNacimiento = new Date(utilDate.getTime()); // Convertir a java.sql.Date
+                    break;
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(ventana, "Error al convertir la fecha. Inténtelo nuevamente.",
+                            "Error de registro", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(ventana, "Por favor, ingrese una fecha válida (DD/MM/AAAA).",
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+            }
         }
 
+        // Validación para el teléfono
         String telefono;
         while (true) {
-            telefono = JOptionPane.showInputDialog(ventana, "Ingrese ssu numero de telefono: ");
+            telefono = JOptionPane.showInputDialog(ventana, "Ingrese su número de teléfono:");
             if (telefono == null) {
                 JOptionPane.showMessageDialog(ventana, cancelMessage, "Registro cancelado",
                         JOptionPane.INFORMATION_MESSAGE);
-                return null; // Salir del registro
+                return null;
             }
             if (telefono.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(ventana, "EEl campo no tiene que estas vacio.",
+                JOptionPane.showMessageDialog(ventana, "El campo no puede estar vacío.",
                         "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else if (!telefono.matches("\\d{10}")) {
-                JOptionPane.showMessageDialog(ventana, 
-                        "Debe ingresar 10 digitos maximo, Intente lo nuevamente.",
+                JOptionPane.showMessageDialog(ventana, "Debe ingresar 10 dígitos. Intente nuevamente.",
                         "Error de registro", JOptionPane.ERROR_MESSAGE);
             } else {
                 break; // Teléfono válido
@@ -94,11 +145,59 @@ public class Registro extends usuario {
             }
 
             String contraseñaString = new String(contraseña);
-            return new Registro(nombre, fechaNacimiento, telefono, correo, contraseñaString);
+
+            // Crear el objeto Registro con los valores ingresados
+            Registro nuevoRegistro = new Registro(0, nombre, fechaNacimiento, telefono, correo, contraseñaString);
+
+            // Intentar insertar los datos en la base de datos
+            if (insertarEnBaseDeDatos(nuevoRegistro)) {
+                JOptionPane.showMessageDialog(ventana, "Registro exitoso", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                return nuevoRegistro;
+            } else {
+                JOptionPane.showMessageDialog(ventana, "Error al guardar en la base de datos", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
         } else {
             JOptionPane.showMessageDialog(ventana, cancelMessage, "Registro cancelado",
                     JOptionPane.INFORMATION_MESSAGE);
             return null;
+        }
+    }
+
+    // Método para insertar los datos en la base de datos
+    private static boolean insertarEnBaseDeDatos(Registro Registro) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            // Establecer la conexión a la base de datos
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
+
+            // Crear la consulta SQL para insertar los datos
+            String sql = "INSERT INTO Registro (nombre, fechaNacimiento, telefono, correo, contraseña) VALUES (?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, Registro.getNombre());
+            stmt.setDate(2, Registro.getFechaNacimiento());
+            stmt.setString(3, Registro.getTelefono());
+            stmt.setString(4, Registro.getCorreo());
+            stmt.setString(5, Registro.getContraseña());
+
+            // Ejecutar la consulta
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
