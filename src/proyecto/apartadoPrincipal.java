@@ -131,27 +131,26 @@ public class apartadoPrincipal {
         responsables.add(creadores3);
         responsables.add(creadores4);
 
-        JMenu tabla = new JMenu("tablas");
-        JMenuItem tablas = new JMenuItem("visualizar tabla");
+        JMenu Inicio1 = new JMenu("Inicio");
+        JMenuItem IniciarLaSesion = new JMenuItem("Iniciar sesion");
+         // Vincular el ítem con el método iniciarSesion
+         IniciarLaSesion.addActionListener(e -> {
+            // Creamos una instancia de la clase InicioSesion
+            //InicioSesion inicioSesion = new InicioSesion();
+            // Llamamos al método iniciarSesion de la clase "InicioSesion"
+            //inicioSesion.iniciarSesion();
+        });
 
-        menuBar.add(tabla);
-        tabla.add(tablas);
+
+        menuBar.add(Inicio1);
+        Inicio1.add(IniciarLaSesion);
 
         // Acción para "Registrarse"
         registro.addActionListener(e -> {
             System.out.println("Opción de registro seleccionada."); // Depuración
             Registro nuevoUsuario = Registro.realizarRegistro(ventana);
             if (nuevoUsuario != null) {
-                JOptionPane.showMessageDialog(
-                        ventana,
-                        "Registro Exitoso:\n" +
-                                "Nombre: " + nuevoUsuario.getNombre() + "\n" +
-                                "Fecha de Nacimiento: " + nuevoUsuario.getFechaNacimiento() + "\n" +
-                                "Teléfono: " + nuevoUsuario.getTelefono() + "\n" +
-                                "Correo: " + nuevoUsuario.getCorreo() + "\n" +
-                                "Contraseña: " + nuevoUsuario.getContraseña(),
-                        "Registro Completado",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(ventana,"Registro Exitoso:\n" +"Nombre: " + nuevoUsuario.getNombre() + "\n" +"Fecha de Nacimiento: " + nuevoUsuario.getFechaNacimiento() + "\n" +"Teléfono: " + nuevoUsuario.getTelefono() + "\n" +"Correo: " + nuevoUsuario.getCorreo() + "\n" +"Contraseña: " + nuevoUsuario.getContraseña(),"Registro Completado",JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
