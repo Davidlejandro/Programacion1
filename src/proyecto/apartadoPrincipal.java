@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 public class apartadoPrincipal {
     public static void main(String[] args) {
@@ -98,6 +99,7 @@ public class apartadoPrincipal {
                 mostrarJuegos("Aventura", ventana);
             }
         });
+        
 
         menuBar.add(categorias);
 
@@ -111,7 +113,7 @@ public class apartadoPrincipal {
         JMenu cliente = new JMenu("Usuario");
         JMenuItem registro = new JMenuItem("Registrarse");
         cliente.add(registro);
-        menuBar.add(cliente);
+        menuBar.add(cliente);   
 
         soporte.addActionListener(e -> soporteTecnico.VentanaSoporte());
 
@@ -131,15 +133,20 @@ public class apartadoPrincipal {
         responsables.add(creadores3);
         responsables.add(creadores4);
 
+                //Crea un menú llamado "Inicio", que será añadido a la barra de menús
         JMenu Inicio1 = new JMenu("Inicio");
         JMenuItem IniciarLaSesion = new JMenuItem("Iniciar sesion");
          // Vincular el ítem con el método iniciarSesion
          IniciarLaSesion.addActionListener(e -> {
-            // Creamos una instancia de la clase InicioSesion
-            //InicioSesion inicioSesion = new InicioSesion();
-            // Llamamos al método iniciarSesion de la clase "InicioSesion"
-            //inicioSesion.iniciarSesion();
-        });
+                    // Creamos una instancia de la clase InicioSesion
+                    InicioSesion inicioSesion = new InicioSesion();
+                    // Llamamos al método iniciarSesion de la clase "InicioSesion"
+                    inicioSesion.iniciarSesion();
+                });
+                //Añade el elemento "IniciarLaSesion" al menu Inicio1
+        menuBar.add(Inicio1);
+        Inicio1.add(IniciarLaSesion);
+        
 
 
         menuBar.add(Inicio1);
@@ -165,28 +172,27 @@ public class apartadoPrincipal {
     }
     // Método para mostrar los juegos
     private static void mostrarJuegos(String categoria, JFrame ventana) {
-        // Obtener la lista de juegos desde la base de datos (simulación)
+        // Obtener la lista de juegos desde la base de datos
         List<Videojuegos> juegos = Videojuegos.obtenerJuegosPorCategoria(categoria);
-
+    
         // Crear una nueva ventana para mostrar los juegos
         JFrame ventanaJuegos = new JFrame(categoria + " - Juegos");
         ventanaJuegos.setSize(800, 400); // Tamaño de la ventana
-        ventanaJuegos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cerrar solo esta ventana
+        ventanaJuegos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventanaJuegos.setLayout(new BorderLayout());
-
+    
         // Crear un modelo de tabla para los datos
         String[] columnas = {"ID", "Título", "Género", "Fecha Lanzamiento", "Calificación", "Plataforma", "Acción"};
         DefaultTableModel modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6; // Solo permitir editar la columna de acción
+                return column == 6; // Solo permitir editar la columna de acción (botón)
             }
         };
-
+    
         // Llenar el modelo con los datos de los videojuegos
         for (Videojuegos juego : juegos) {
-            // Crear una nueva fila con los datos del juego
-            modeloTabla.addRow(new Object[] {
+            modeloTabla.addRow(new Object[]{
                 juego.getID(),
                 juego.getTitulo(),
                 juego.getGenero(),
@@ -196,27 +202,35 @@ public class apartadoPrincipal {
                 "Comprar" // Texto del botón
             });
         }
+    
+// Supongamos que tienes una lista de juegos y una tabla configurada en tu código
+JTable tabla = new JTable(modeloTabla); // Instancia de la tabla
 
-        // Crear la tabla con el modelo
-        JTable tabla = new JTable(modeloTabla);
-
+// Configuración del editor de celdas con el botón en la columna 6
+tabla.getColumnModel().getColumn(6).setCellEditor(
+    new ButtonEditor(new JCheckBox(), tabla, juegos) // Se pasa la tabla y la lista de juegos al ButtonEditor
+);
+    // Configuración del renderizador para el botón
+    tabla.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
+    
         // Hacer que la tabla sea desplazable si tiene muchos datos
         JScrollPane scrollPane = new JScrollPane(tabla);
         ventanaJuegos.add(scrollPane, BorderLayout.CENTER);
-
+    
         // Hacer visible la ventana con la tabla
         ventanaJuegos.setVisible(true);
     }
 
     // Método de confirmación de compra
-    public static void mostrarConfirmacionCompra(Videojuegos juego, String usuario) {
+    public static void mostrarConfirmacionCompra(Videojuegos juego, Registro usuario) {
         String mensaje = "Compra realizada con éxito\n" +
                          "Juego: " + juego.getTitulo() + "\n" +
-                         "Usuario: " + usuario + "\n" +
+                         "Usuario: " + usuario.getNombre() + "\n" +
                          "Plataforma: " + juego.getPlataforma() + "\n" +
-                         "Fecha de Lanzamiento: " + juego.getFecha_lanzamiento() + "\n" +
-                         "Calificación: " + juego.getCalificacion();
+                         "Fecha de Lanzamiento: " + juego.getFecha_lanzamiento() + "\n" + 
+                         "Calificación: " + juego.getCalificacion() + "\n"+ 
+                         "Correo del Usuario: " + usuario.getCorreo() + "\n";
         JOptionPane.showMessageDialog(null, mensaje, "Confirmación de Compra", JOptionPane.INFORMATION_MESSAGE);
     }
-
+    
 }

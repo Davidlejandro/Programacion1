@@ -9,6 +9,8 @@ import java.sql.*;
 
 import java.text.SimpleDateFormat;
 // Importa la clase para formatear y analizar fechas.
+import java.util.ArrayList;
+import java.util.List;
 
 public class Registro {
     // Define la clase pública "Registro".
@@ -25,17 +27,17 @@ public class Registro {
     // Correo electrónico del usuario.
     private String correo;
     // Contraseña del usuario.
-    private String contraseña;
+    private String password;
 
     // Constructor que inicializa los atributos de la clase.
-    public Registro(int id, String nombre, Date fechaNacimiento, String telefono, String correo, String contraseña) {
+    public Registro(int id, String nombre, Date fechaNacimiento, String telefono, String correo, String password) {
         // Instanciamos los valores de la clase Registro
         this.id = id;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.correo = correo;
-        this.contraseña = contraseña;
+        this.password = password;
     }
 
     // Uso del métodos "getter" el cual permiten acceder a los valores de los
@@ -61,7 +63,7 @@ public class Registro {
     }
 
     public String getContraseña() {
-        return contraseña;
+        return password;
     }
 
     // Método estático que permite realizar el registro del usuario. Toma un objeto
@@ -96,24 +98,43 @@ public class Registro {
       String fechaNacimientoStr;
       Date fechaNacimiento = null;
       while (true) {
-          fechaNacimientoStr = JOptionPane.showInputDialog(ventana, "Ingrese su Fecha de Nacimiento (DD/MM/AAAA):");
+          fechaNacimientoStr = JOptionPane.showInputDialog(ventana, "Ingrese su Fecha de Nacimiento (DD/MM/YYYY):");
 
           if (fechaNacimientoStr == null) return null;
+            // Verifica si la cadena ingresada cumple con el formato requerido (solo números
+            // y 8 caracteres).
+            if (fechaNacimientoStr.matches("\\d{8}")) {
+                try {
+                    // Extraer día, mes y año de la cadena ingresada.
+                    String dia = fechaNacimientoStr.substring(0, 2);
+                    String mes = fechaNacimientoStr.substring(2, 4);
+                    String anio = fechaNacimientoStr.substring(4, 8);
 
-          if (fechaNacimientoStr.matches("\\d{2}/\\d{2}/\\d{4}")) {
-              try {
-                  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                  java.util.Date utilDate = sdf.parse(fechaNacimientoStr);
-                  fechaNacimiento = new Date(utilDate.getTime());
-                  break;
-              } catch (Exception e) {
-                  JOptionPane.showMessageDialog(ventana, "Error al Ingresar la fecha. Inténtelo nuevamente.", "Error de registro", JOptionPane.ERROR_MESSAGE);
-              }
-          } else {
-              JOptionPane.showMessageDialog(ventana, "Por favor, ingrese una fecha válida (DD/MM/AAAA).", "Error de registro", JOptionPane.ERROR_MESSAGE);
-          }
-      }
+                    // Crear una cadena con formato "DD/MM/YYYY" para facilitar la conversión.
+                    String fechaConFormato = dia + "/" + mes + "/" + anio;
 
+                    // Crear un objeto "SimpleDateFormat" con el formato "dd/MM/yyyy".
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    sdf.setLenient(false); // Para evitar fechas inválidas como 31/02/2023.
+
+                    // Convertir la fecha a un objeto "java.util.Date".
+                    java.util.Date utilDate = sdf.parse(fechaConFormato);
+
+                    // Convertir la fecha util a un objeto SQL Date.
+                    fechaNacimiento = new Date(utilDate.getTime());
+
+                    // Si todo es exitoso, el bucle se interrumpe con break.
+                    break;
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(ventana, "Error al Ingresar la fecha. Inténtelo nuevamente.",
+                            "Error de registro", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(ventana, "Por favor, ingrese una fecha válida (DDMMYYYY).",
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
       // Solicitar y validar el número de teléfono.
       String telefono;
       while (true) {
@@ -161,16 +182,16 @@ public class Registro {
       }
 
       // Solicitar la contraseña.
-      JPasswordField contraseñaField = new JPasswordField();
-      int option = JOptionPane.showConfirmDialog(ventana, contraseñaField, "Ingrese una Contraseña:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      JPasswordField passwordField = new JPasswordField();
+      int option = JOptionPane.showConfirmDialog(ventana, passwordField, "Ingrese una Contraseña:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
-          char[] contraseña = contraseñaField.getPassword();
-          if (contraseña.length == 0) {
+          char[] password = passwordField.getPassword();
+          if (password.length == 0) {
               JOptionPane.showMessageDialog(ventana, "Debe ingresar una contraseña.", "Error de registro", JOptionPane.ERROR_MESSAGE);
               return null;
           }
-          String contraseñaString = new String(contraseña);
+          String contraseñaString = new String(password);
 
           Registro nuevoRegistro = new Registro(0, nombre, fechaNacimiento, telefono, correo, contraseñaString);
 
@@ -214,7 +235,7 @@ public class Registro {
 
       try {
           conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
-          String sql = "INSERT INTO Registro (nombre, fechaNacimiento, telefono, correo, contraseña) VALUES (?, ?, ?, ?, ?)";
+          String sql = "INSERT INTO Registros (nombre, fechaNacimiento, telefono, correo, password) VALUES (?, ?, ?, ?, ?)";
           stmt = conn.prepareStatement(sql);
           stmt.setString(1, registro.getNombre());
           stmt.setDate(2, registro.getFechaNacimiento());
@@ -236,4 +257,49 @@ public class Registro {
             }
         }
     }
+
+    // Método para obtener todos los usuarios registrados en la base de datos
+    public static List<Registro> obtenerUsuarios() {
+    List<Registro> listaDeUsuarios = new ArrayList<>();
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+
+    try {
+        // Establecer conexión con la base de datos (ajusta la URL, usuario y contraseña)
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
+
+        // Consultar todos los registros de usuarios
+        String sql = "SELECT * FROM Registro";
+        stmt = conn.prepareStatement(sql);
+        rs = stmt.executeQuery();
+
+        // Procesar los resultados y agregar a la lista
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            Date fechaNacimiento = rs.getDate("fechaNacimiento");
+            String telefono = rs.getString("telefono");
+            String correo = rs.getString("correo");
+            String password = rs.getString("password");
+
+            // Crear un objeto Registro y añadirlo a la lista
+            Registro registro = new Registro(id, nombre, fechaNacimiento, telefono, correo, password);
+            listaDeUsuarios.add(registro);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    return listaDeUsuarios;
+}
+
 }
