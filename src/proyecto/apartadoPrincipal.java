@@ -229,7 +229,8 @@ tabla.getColumnModel().getColumn(6).setCellEditor(
                          "Plataforma: " + juego.getPlataforma() + "\n" +
                          "Fecha de Lanzamiento: " + juego.getFecha_lanzamiento() + "\n" + 
                          "Calificación: " + juego.getCalificacion() + "\n"+ 
-                         "Correo del Usuario: " + usuario.getCorreo() + "\n";
+                         "Correo del Usuario: " + usuario.getCorreo() + "\n" +
+                         "Precio: " + juego.getPrecio() + "\n";
         JOptionPane.showMessageDialog(null, mensaje, "Confirmación de Compra", JOptionPane.INFORMATION_MESSAGE);
     }
     

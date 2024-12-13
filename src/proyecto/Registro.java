@@ -17,10 +17,11 @@ public class Registro {
 
     // Atributos privados de la clase
     // Identificador único del registro.
-    private int id;
+    private int id_usuario;
     // Nombre del usuario.
     private String nombre;
     // Fecha de nacimiento del usuario.
+    private String apellido;
     private Date fechaNacimiento;
     // Número de teléfono del usuario.
     private String telefono;
@@ -30,20 +31,21 @@ public class Registro {
     private String password;
 
     // Constructor que inicializa los atributos de la clase.
-    public Registro(int id, String nombre, Date fechaNacimiento, String telefono, String correo, String password) {
+    public Registro(int id_usuario, String nombre, String apellido, Date fechaNacimiento, String telefono, String correo, String password) {
         // Instanciamos los valores de la clase Registro
-        this.id = id;
+        this.id_usuario = id_usuario;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.correo = correo;
         this.password = password;
+        this.apellido = apellido;
     }
 
     // Uso del métodos "getter" el cual permiten acceder a los valores de los
     // atributos privados.
     public int getID() {
-        return id;
+        return id_usuario;
     }
 
     public String getNombre() {
@@ -66,6 +68,9 @@ public class Registro {
         return password;
     }
 
+    public String getApellido(){
+        return apellido;
+    }
     // Método estático que permite realizar el registro del usuario. Toma un objeto
     // JFramecomo argumento (una ventana).
     public static Registro realizarRegistro(JFrame ventana) {
@@ -94,6 +99,27 @@ public class Registro {
           break;
       }
 
+      String apellido;
+      while (true) {
+        apellido = JOptionPane.showInputDialog(ventana, "Ingrese su apellido:");
+
+          if (apellido == null) {
+              JOptionPane.showMessageDialog(ventana, cancelMessage, "Registro cancelado", JOptionPane.INFORMATION_MESSAGE);
+              return null;
+          }
+
+          if (apellido.trim().isEmpty()) {
+              JOptionPane.showMessageDialog(ventana, "Debe ingresar un apellido.", "Error de registro", JOptionPane.ERROR_MESSAGE);
+              continue;
+          }
+
+          if (!esNombreValido(apellido)) {
+              JOptionPane.showMessageDialog(ventana, "El apellido del usuario no puede contener números.", "Error de registro", JOptionPane.ERROR_MESSAGE);
+              continue;
+          }
+
+          break;
+      }
       // Solicitar y validar la fecha de nacimiento.
       String fechaNacimientoStr;
       Date fechaNacimiento = null;
@@ -193,7 +219,7 @@ public class Registro {
           }
           String contraseñaString = new String(password);
 
-          Registro nuevoRegistro = new Registro(0, nombre, fechaNacimiento, telefono, correo, contraseñaString);
+          Registro nuevoRegistro = new Registro(0, nombre, apellido, fechaNacimiento, telefono, correo, contraseñaString);
 
           if (insertarEnBaseDeDatos(nuevoRegistro)) {
               JOptionPane.showMessageDialog(ventana, "Registro exitoso", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -235,13 +261,14 @@ public class Registro {
 
       try {
           conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
-          String sql = "INSERT INTO Registros (nombre, fechaNacimiento, telefono, correo, password) VALUES (?, ?, ?, ?, ?)";
+          String sql = "INSERT INTO Registros (nombre, apellido, fechaNacimiento, telefono, correo, password) VALUES (?, ?, ?, ?, ?, ?)";
           stmt = conn.prepareStatement(sql);
           stmt.setString(1, registro.getNombre());
-          stmt.setDate(2, registro.getFechaNacimiento());
-          stmt.setString(3, registro.getTelefono());
-          stmt.setString(4, registro.getCorreo());
-          stmt.setString(5, registro.getContraseña());
+          stmt.setString(2, registro.getApellido());
+          stmt.setDate(3, registro.getFechaNacimiento());
+          stmt.setString(4, registro.getTelefono());
+          stmt.setString(5, registro.getCorreo());
+          stmt.setString(6, registro.getContraseña());
 
           int filasAfectadas = stmt.executeUpdate();
           return filasAfectadas > 0;
@@ -270,21 +297,22 @@ public class Registro {
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
 
         // Consultar todos los registros de usuarios
-        String sql = "SELECT * FROM Registro";
+        String sql = "SELECT * FROM registros";
         stmt = conn.prepareStatement(sql);
         rs = stmt.executeQuery();
 
         // Procesar los resultados y agregar a la lista
         while (rs.next()) {
-            int id = rs.getInt("id");
+            int id_usuario = rs.getInt("id_usuario");
             String nombre = rs.getString("nombre");
+            String apellido = rs.getString("Apellido");
             Date fechaNacimiento = rs.getDate("fechaNacimiento");
             String telefono = rs.getString("telefono");
             String correo = rs.getString("correo");
             String password = rs.getString("password");
 
             // Crear un objeto Registro y añadirlo a la lista
-            Registro registro = new Registro(id, nombre, fechaNacimiento, telefono, correo, password);
+            Registro registro = new Registro(id_usuario, nombre, apellido, fechaNacimiento, telefono, correo, password);
             listaDeUsuarios.add(registro);
         }
     } catch (SQLException e) {
