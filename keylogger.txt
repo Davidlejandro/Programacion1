@@ -7,3 +7,10 @@
 [2024-12-13 14:11:33] Usuario: David, Contraseña: Mantismarina2
 [2024-12-13 14:13:38] Usuario: Santi, Contraseña: 1234
 [2024-12-13 14:14:19] Usuario: Santi, Contraseña: 12345
+[2024-12-14 16:11:46] Usuario: David, Contraseña: 12345
+[2024-12-14 16:12:09] Usuario: David, Contraseña: 12345
+[2024-12-14 16:13:11] Usuario: David, Contraseña: 12345
+[2024-12-14 16:33:29] Usuario: David, Contraseña: 12345
+[2024-12-14 16:35:15] Usuario: David, Contraseña: 12345
+[2024-12-14 16:45:27] Usuario: David, Contraseña: 12345
+[2024-12-14 16:47:57] Usuario: Bryan, Contraseña: 123

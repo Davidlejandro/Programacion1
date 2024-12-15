@@ -58,7 +58,7 @@ public class Videojuegos {
     // Método para obtener los juegos de acuerdo con la categoría desde la base de datos
     public static List<Videojuegos> obtenerJuegosPorCategoria(String categoria) {
         List<Videojuegos> juegos = new ArrayList<>();
-        String jdbcURL = "jdbc:mysql://localhost:3306/juegos"; // URL de tu base de datos
+        String jdbcURL = "jdbc:mysql://localhost:3306/juego"; // URL de tu base de datos
         String usuario = "root"; // Usuario de MySQL
         String contraseña = "Mantismarina2"; // Contraseña de MySQL
 

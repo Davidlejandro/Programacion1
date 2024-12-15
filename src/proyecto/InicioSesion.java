@@ -65,14 +65,18 @@ public class InicioSesion  {
             // Registrar el intento de inicio de sesión en un archivo keylogger
             registrarEntrada(nombre, contraseña);
 
-            // Validar las credenciales ingresadas contra la base de datos
             if (validarCredenciales(nombre, contraseña)) {
                 JOptionPane.showMessageDialog(null, "Inicio de sesión exitoso.",
                         "Ingreso Realizado", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Crear un objeto Registro con los datos del usuario autenticado
+                Registro usuario = new Registro();
+                usuario.setNombre(nombre);
+                usuario.setContraseña(contraseña);
+            
+                // Guardar el usuario en la clase SesionActiva
+                almacenarSesion.setUsuarioActivo(usuario);
                 break; // Salir del bucle si las credenciales son correctas
-            } else {
-                JOptionPane.showMessageDialog(null, "Datos incorrectos. Intente nuevamente.",
-                        "Error de Sesión", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -123,10 +127,10 @@ public class InicioSesion  {
 
         try {
             // Conectar a la base de datos usando los parámetros especificados
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juego", "root", "Mantismarina2");
 
             // Preparar la consulta SQL para buscar las credenciales
-            String sql = "SELECT * FROM Registros WHERE nombre = ? AND password = ?";
+            String sql = "SELECT * FROM Registro WHERE nombre = ? AND password = ?";
             stmt = conn.prepareStatement(sql);
             // Establecer el nombre como parámetro
             stmt.setString(1, nombre); 

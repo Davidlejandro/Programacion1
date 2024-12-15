@@ -22,19 +22,14 @@ public class ButtonEditor extends DefaultCellEditor {
         button = new JButton();
         button.setOpaque(true);
     
-        // Evento del botón
         button.addActionListener(e -> {
             int row = table.getSelectedRow(); // Obtener la fila seleccionada de la tabla
-            if (row >= 0 && row < juegos.size() && usuarios.size() >= 0) {
-                // Obtener el segundo usuario
-                Registro usuarioSeleccionado = usuarios.get(0);  // Selecciona el segundo registro
-    
-                if (usuarioSeleccionado != null) {
-                    // Obtener el juego de la fila seleccionada
-                    Videojuegos juegoSeleccionado = juegos.get(row);
-                    // Llamar al método de confirmación de compra con el juego y el objeto Registro del usuario
-                    apartadoPrincipal.mostrarConfirmacionCompra(juegoSeleccionado, usuarioSeleccionado);
-                }
+            if (row >= 0 && row < juegos.size()) {
+                // Obtener el juego de la fila seleccionada
+                Videojuegos juegoSeleccionado = juegos.get(row);
+                
+                // Mostrar la confirmación de compra usando el usuario activo
+                apartadoPrincipal.mostrarConfirmacionCompra(juegoSeleccionado);
             }
             clicked = true;
             fireEditingStopped();

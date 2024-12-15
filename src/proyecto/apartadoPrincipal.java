@@ -133,7 +133,7 @@ public class apartadoPrincipal {
         responsables.add(creadores3);
         responsables.add(creadores4);
 
-                //Crea un menú llamado "Inicio", que será añadido a la barra de menús
+        //Crea un menú llamado "Inicio", que será añadido a la barra de menús
         JMenu Inicio1 = new JMenu("Inicio");
         JMenuItem IniciarLaSesion = new JMenuItem("Iniciar sesion");
          // Vincular el ítem con el método iniciarSesion
@@ -143,7 +143,7 @@ public class apartadoPrincipal {
                     // Llamamos al método iniciarSesion de la clase "InicioSesion"
                     inicioSesion.iniciarSesion();
                 });
-                //Añade el elemento "IniciarLaSesion" al menu Inicio1
+        //Añade el elemento "IniciarLaSesion" al menu Inicio1
         menuBar.add(Inicio1);
         Inicio1.add(IniciarLaSesion);
         
@@ -221,17 +221,25 @@ tabla.getColumnModel().getColumn(6).setCellEditor(
         ventanaJuegos.setVisible(true);
     }
 
-    // Método de confirmación de compra
-    public static void mostrarConfirmacionCompra(Videojuegos juego, Registro usuario) {
+    public static void mostrarConfirmacionCompra(Videojuegos juego) {
+        // Obtener el usuario activo desde la sesión
+        Registro usuario = almacenarSesion.getUsuarioActivo();
+    
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(null, "No hay un usuario autenticado.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
         String mensaje = "Compra realizada con éxito\n" +
                          "Juego: " + juego.getTitulo() + "\n" +
                          "Usuario: " + usuario.getNombre() + "\n" +
                          "Plataforma: " + juego.getPlataforma() + "\n" +
                          "Fecha de Lanzamiento: " + juego.getFecha_lanzamiento() + "\n" + 
-                         "Calificación: " + juego.getCalificacion() + "\n"+ 
-                         "Correo del Usuario: " + usuario.getCorreo() + "\n" +
+                         "Calificación: " + juego.getCalificacion() + "\n" +
                          "Precio: " + juego.getPrecio() + "\n";
+    
         JOptionPane.showMessageDialog(null, mensaje, "Confirmación de Compra", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
 }

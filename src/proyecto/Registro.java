@@ -42,6 +42,10 @@ public class Registro {
         this.apellido = apellido;
     }
 
+    public Registro(){
+
+    }
+    
     // Uso del métodos "getter" el cual permiten acceder a los valores de los
     // atributos privados.
     public int getID() {
@@ -70,6 +74,14 @@ public class Registro {
 
     public String getApellido(){
         return apellido;
+    }
+    
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
+    public void setContraseña(String contraseña) {
+        this.password = contraseña;
     }
     // Método estático que permite realizar el registro del usuario. Toma un objeto
     // JFramecomo argumento (una ventana).
@@ -260,8 +272,8 @@ public class Registro {
       PreparedStatement stmt = null;
 
       try {
-          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
-          String sql = "INSERT INTO Registros (nombre, apellido, fechaNacimiento, telefono, correo, password) VALUES (?, ?, ?, ?, ?, ?)";
+          conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juego", "root", "Mantismarina2");
+          String sql = "INSERT INTO Registro (nombre, apellido, fechaNacimiento, telefono, correo, password) VALUES (?, ?, ?, ?, ?, ?)";
           stmt = conn.prepareStatement(sql);
           stmt.setString(1, registro.getNombre());
           stmt.setString(2, registro.getApellido());
@@ -294,10 +306,10 @@ public class Registro {
 
     try {
         // Establecer conexión con la base de datos (ajusta la URL, usuario y contraseña)
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juegos", "root", "Mantismarina2");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/Juego", "root", "Mantismarina2");
 
         // Consultar todos los registros de usuarios
-        String sql = "SELECT * FROM registros";
+        String sql = "SELECT * FROM registro";
         stmt = conn.prepareStatement(sql);
         rs = stmt.executeQuery();
 
@@ -328,6 +340,5 @@ public class Registro {
     }
 
     return listaDeUsuarios;
-}
-
+    }
 }
