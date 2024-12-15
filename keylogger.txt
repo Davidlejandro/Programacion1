@@ -14,3 +14,6 @@
 [2024-12-14 16:35:15] Usuario: David, Contraseña: 12345
 [2024-12-14 16:45:27] Usuario: David, Contraseña: 12345
 [2024-12-14 16:47:57] Usuario: Bryan, Contraseña: 123
+[2024-12-15 08:28:57] Usuario: David, Contraseña: 12345
+[2024-12-15 08:30:45] Usuario: Bryan, Contraseña: 123456
+[2024-12-15 10:21:12] Usuario: David, Contraseña: 12345

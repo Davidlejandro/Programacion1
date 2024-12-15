@@ -1,7 +1,8 @@
 package proyecto;
-
+//Definicion de clase "almacenarSesion"
 public class almacenarSesion {
-    private static Registro usuarioActivo; // Objeto para el usuario activo
+    // Objeto para el usuario activo
+    private static Registro usuarioActivo; 
 
     // Método para establecer el usuario activo
     public static void setUsuarioActivo(Registro usuario) {

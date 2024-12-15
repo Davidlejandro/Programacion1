@@ -1,83 +1,125 @@
-package proyecto;
-import javax.swing.*;
-import java.awt.*;
-public class esteban {
-    
-    public static void VentanaCreadorCuatro() {
-        // Configuración de la ventana
-        JFrame ventana = new JFrame("GameStore");
-        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        ventana.setSize(1000, 700);
+package proyecto;  // Define el paquete del proyecto
+// Importa las clases necesarias para los componentes de la interfaz gráficab
+import javax.swing.*; 
+import java.awt.*;    
+//Definicion de clase llamado "esteban"
+public class esteban { 
+ // Método que configura y muestra la ventana con la información del creador "Esteban"
+    public static void VentanaCreadorCuatro() { 
+        
+        // Configuración de la ventana principal
+        // Crea una nueva ventana con título "GameStore"
+        JFrame ventana = new JFrame("GameStore");  
+        // Establece que la ventana se cierre al pulsar el botón de cierre
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  
+        // Establece el tamaño de la ventana a 1000x700 píxeles
+        ventana.setSize(1000, 700);  
 
-        // Configurar el ícono personalizado
-        Image icono = Toolkit.getDefaultToolkit().getImage("img/icono.png");
-        ventana.setIconImage(icono);
+        // Configurar el ícono personalizado de la ventana
+        // Carga una imagen como icono
+        Image icono = Toolkit.getDefaultToolkit().getImage("img/icono.png");  
+        // Establece el icono de la ventana
+        ventana.setIconImage(icono);  
 
         // Crear un JPanel con un fondo personalizado
-        ImageIcon fondoApp = new ImageIcon("img/principal.jpg");
-        JPanel fondo = new JPanel() {
+        // Carga una imagen de fondo para la ventana
+        ImageIcon fondoApp = new ImageIcon("img/principal.jpg");  
+        // Crea un JPanel personalizado
+        JPanel fondo = new JPanel() {  
             @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(fondoApp.getImage(), 0, 0, getWidth(), getHeight(), this);
+            // Sobrescribe el método para pintar el fondo
+            protected void paintComponent(Graphics g) {  
+                // Llama al método de la clase base para asegurarse de que se dibuje correctamente
+                super.paintComponent(g);  
+                // Se dibuja la imagen de fondo en el panel. El fondo se ajusta para cubrir todo el tamaño del panel.
+                g.drawImage(fondoApp.getImage(), 0, 0, getWidth(), getHeight(), this);  
             }
         };
-        fondo.setLayout(null);
+        // Establece el layout del JPanel como null para permitir posiciones absolutas de los componentes
+        fondo.setLayout(null); 
 
-        // Crear y configurar los labels
-        JLabel titulo = new JLabel("Esteban sanchez", SwingConstants.CENTER);
-        titulo.setBounds(345, 40, 350, 40);
-        titulo.setForeground(Color.WHITE);
-        titulo.setFont(new Font("Arial", Font.BOLD, 35));
-        fondo.add(titulo);
+        // Crear y configurar los labels definidos
+        // Crea una etiqueta con el nombre del creador, centrada
+        JLabel titulo = new JLabel("Esteban sanchez", SwingConstants.CENTER); 
+        // Establece la posición y tamaño del título
+        titulo.setBounds(345, 40, 350, 40);  
+        // Establece el color de la fuente a blanco
+        titulo.setForeground(Color.WHITE);  
+        // Establece la fuente, el estilo y el tamaño del texto
+        titulo.setFont(new Font("Arial", Font.BOLD, 35));  
+        // Añade la etiqueta al JPanel de fondo
+        fondo.add(titulo);  
+        // Crea una etiqueta con la descripción del creador, centrada
+        JLabel descripcion = new JLabel( "<html>Colaborador en diagramas de base de datos, y codigo java, <br>Desarrollador de diapositivas de presentacion, y formato del proyecto.</html>", SwingConstants.CENTER);
+                // Establece la posición y tamaño de la descripción
+        descripcion.setBounds(30, 200, 940, 60); 
+        // Establece el color del texto a blanco
+        descripcion.setForeground(Color.WHITE);  
+        // Establece la fuente, el estilo y el tamaño de la descripción
+        descripcion.setFont(new Font("Arial", Font.BOLD, 20));  
+        // Añade la descripción al JPanel de fondo
+        fondo.add(descripcion);  
 
-        JLabel descripcion = new JLabel(
-                "<html>Desarrollador de ingreso de metodo de pago con debito y nombre de la facturacion, <br>colaborador en facturacion y colaborador en desarrollo de la base de datos del proyecto.</html>",
-                SwingConstants.CENTER);
-        descripcion.setBounds(30, 200, 940, 60);
-        descripcion.setForeground(Color.WHITE);
-        descripcion.setFont(new Font("Arial", Font.BOLD, 20));
-        fondo.add(descripcion);
-        ImageIcon Foto = new ImageIcon("img/esteban.jpg");
-        JLabel etiquetaImagen = new JLabel(Foto);
-        etiquetaImagen.setBounds(355, 320, 300, 300); // Ajusta la posición y tamaño
-        fondo.add(etiquetaImagen);
-        ImageIcon originalIcon = new ImageIcon("img/esteban.jpg");
-        Image originalImage = originalIcon.getImage();
+        // Cargar y mostrar una foto del creador
+        // Carga la imagen del creador
+        ImageIcon Foto = new ImageIcon("img/esteban.jpg");  
+        // Crea un JLabel con la foto del creador
+        JLabel etiquetaImagen = new JLabel(Foto);  
+        // Establece la posición y tamaño de la imagen
+        etiquetaImagen.setBounds(355, 320, 300, 300);  
+        // Añade la imagen al JPanel de fondo
+        fondo.add(etiquetaImagen); 
+        
+        // Escalar la imagen proporcionalmente al tamaño del JLabel
+        // Carga la imagen original
+        ImageIcon originalIcon = new ImageIcon("img/esteban.jpg"); 
+        // Obtiene el objeto Image de la imagen original
+        Image originalImage = originalIcon.getImage();  
 
-        // Escalar la imagen proporcionalmente
-        int labelWidth = etiquetaImagen.getWidth();
-        int labelHeight = etiquetaImagen.getHeight();
-        Image scaledImage = originalImage.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+        // Escalar la imagen al tamaño del JLabel
+        // Obtiene el ancho del JLabel
+        int labelWidth = etiquetaImagen.getWidth(); 
+        // Obtiene la altura del JLabel
+        int labelHeight = etiquetaImagen.getHeight();  
+        // Escala la imagen proporcionalmente
+        Image scaledImage = originalImage.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH); 
 
-        // Establecer la nueva imagen escalada
+        // Establecer la nueva imagen escalada en el JLabel
         etiquetaImagen.setIcon(new ImageIcon(scaledImage));
 
+        // Escucha los cambios en el tamaño de la ventana para reajustar los componentes
         ventana.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
-                int anchoDeVentana = ventana.getWidth();
-                titulo.setBounds((anchoDeVentana - 300) / 2, 40, 300, 40); // Centrado
-                descripcion.setBounds((anchoDeVentana - 800) / 2, 250, 800, 60); // Justo debajo del título
-               
+                // Obtiene el ancho de la ventana
+                int anchoDeVentana = ventana.getWidth();  
+                // Centra el título horizontalmente
+                titulo.setBounds((anchoDeVentana - 300) / 2, 40, 300, 40); 
+                // Centra la descripción horizontalmente 
+                descripcion.setBounds((anchoDeVentana - 800) / 2, 250, 800, 60); 
             }
         });
-        
 
+        // Crear un menú con la opción de cerrar la ventana
+        // Crea una barra de menú
         JMenuBar menuBar = new JMenuBar();
-        // Crear el menú "Salir"
-        JMenu salir = new JMenu("Salir");
-        JMenuItem cerrarSesion = new JMenuItem("Cerrar ventana");
-        // Se realiza una acción para cerra el sistema inmobiliario
-       // Crear el menú "Salir"
-       cerrarSesion.addActionListener(e -> ventana.dispose());
-       menuBar.add(salir);
-       salir.add(cerrarSesion);
+        // Crea un menú "Salir"  
+        JMenu salir = new JMenu("Salir"); 
+         // Crea un ítem de menú para cerrar la ventana
+        JMenuItem cerrarSesion = new JMenuItem("Cerrar ventana"); 
+        // Define la acción de cerrar la ventana
+        cerrarSesion.addActionListener(e -> ventana.dispose());  
+        // Añade el menú "Salir" a la barra de menú
+        menuBar.add(salir);  
+        // Añade el ítem "Cerrar ventana" al menú "Salir"
+        salir.add(cerrarSesion);  
 
-        
+        // Establecer la barra de menú en la ventana
         ventana.setJMenuBar(menuBar);
+
+        // Hacer visible la ventana
         ventana.setVisible(true);
 
-        // Configurar el panel como contenido de la ventana
+        // Configurar el panel con fondo como contenido de la ventana
         ventana.setContentPane(fondo);
 
         // Hacer visible la ventana
